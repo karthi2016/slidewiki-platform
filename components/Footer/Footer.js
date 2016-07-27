@@ -1,12 +1,12 @@
 import React from 'react';
 import { NavLink } from 'fluxible-router';
-import {branch, head} from '../../configs/version.js';
+require('dotenv').config({slient: true});
 
 class Footer extends React.Component {
     render() {
         let versionString = '';
-        if (branch !== false && head !== false) {
-            versionString = '- Build: ' + branch + ' @' + head;
+        if (process.env.SWREPO_BRANCH && process.env.SWREPO_HEAD) {
+            versionString = '- Build: ' + process.env.SWREPO_BRANCH + ' @' + process.env.SWREPO_HEAD;
         }
         return (
             <div className="ui footer sticky segment" ref="footer">

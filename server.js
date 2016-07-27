@@ -20,6 +20,8 @@ import app from './app';
 import HTMLComponent from './components/DefaultHTMLLayout';
 import { createElementWithContext } from 'fluxible-addons-react';
 
+require('dotenv').config({slient: true});
+
 const env = process.env.NODE_ENV;
 
 const debug = debugLib('slidewiki-platform');
