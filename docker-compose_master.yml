@@ -1,0 +1,8 @@
+slidewikiplatform:
+  image: slidewiki/platform:master
+  restart: always
+  expose:
+    - "80"
+  environment:
+    - PORT=80
+    - VIRTUAL_HOST=platform.manfredfris.ch
