@@ -15,19 +15,19 @@ class UserProfileStore extends BaseStore {
             userdeleted: false
         };
         this.user = {
-            uname: '',
-            fname: '',
-            lname: '',
-            email: '',
-            language: '',
-            country: '',
-            organization: '',
-            picture: '',
-            description: ''
+            uname: 'sdfdsf',
+            fname: 'sdfsdf',
+            lname: 'sdfsdf',
+            email: 'sdfsdf',
+            language: 'sd',
+            country: 'sdsd',
+            organization: 'sd',
+            picture: 'asd',
+            description: 'asd'
         };
-        this.username = '';
-        this.userid = '';
-        this.jwt = '';
+        this.username = 'testklaas';
+        this.userid = '1';
+        this.jwt = 'sdfdsf';
         this.errorMessage = '';
     }
 

@@ -8,6 +8,7 @@ class DefaultHTMLLayout extends React.Component {
             <head>
                 <meta charSet="utf-8" />
                 <title>{this.props.context.getStore(ApplicationStore).getPageTitle()}</title>
+                <meta http-equiv="Content-Security-Policy" content="default-src *; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'; media-src * 'unsafe-inline'; img-src data: * 'unsafe-inline'" />
                 <meta name="viewport" content="width=device-width, user-scalable=no" />
                 <link href="/custom_modules/custom-semantic-ui/dist/semantic.min.css" rel="stylesheet" type="text/css" />
                 <link href="/assets/css/custom.css" rel="stylesheet" type="text/css" />

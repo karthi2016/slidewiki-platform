@@ -19,7 +19,7 @@ export default {
             //knownLength: params.file.size ? params.file.size : params.base64.length
 
         let request = form.submit({
-            port: '80',
+            port: '8880',
             host: Microservices.import.host,
             path: Microservices.import.path,
             protocol: Microservices.import.protocol,

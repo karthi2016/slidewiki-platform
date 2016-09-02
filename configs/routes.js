@@ -281,7 +281,8 @@ export default {
         path: '/importfile',
         method: 'post',
         page: 'importfile',
-        handler: require('../actions/loadImportFile'),
+        //handler: require('../actions/loadImportFile'),
+        handler: require('../components/Deck/Presentation/Presentation'),
         action: (context, payload, done) => {
             context.executeAction(loadImportFile, payload, done);
             //context.executeAction(loadPresentation, payload, done);
