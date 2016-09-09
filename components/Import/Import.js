@@ -2,95 +2,132 @@ import React from 'react';
 import {connectToStores} from 'fluxible-addons-react';
 import {NavLink, navigateAction} from 'fluxible-router';
 import ImportStore from '../../stores/ImportStore';
-import importFileSelect from '../../actions/importFileSelect';
-import loadImportFile from '../../actions/loadImportFile';
-import importFinished from '../../actions/importFinished';
+import storeFile from '../../actions/import/storeFile';
+import importFinished from '../../actions/import/importFinished';
+//import FileUploader from './FileUploader';
 let ReactDOM = require('react-dom');
+let classNames = require('classnames');
 //TODO - nice feature (later/non-critical) = drag & drop + upload multiple files
 
+const MAX_FILESIZE = 300 * 1024 * 1024;
+
 class Import extends React.Component {
+    constructor(props) {
+        super(props);
+    }
     componentDidMount(){
-        //after loading component - focus on select-file button
-        ReactDOM.findDOMNode(this.refs.selectbutton).focus();
+
     }
     componentDidUpdate(){
-        if (this.props.ImportStore.isAllowed && !this.props.ImportStore.isUploaded)
-        {
-            //if fileformat is correct and file is not yet being uploaded
+        if (this.props.ImportStore.file === null)
+            $('#import_file_chooser').val('');
+    }
+    handleFileSelect(evt){
+        console.log('handleFileSelect()');
+
+        this.context.executeAction(importFinished, null);
+
+        console.log(evt.target.files[0]);
+        let file = evt.target.files[0];
+        if (file === null || file === undefined)
+            file = {
+                type: '',
+                size: 0
+            };
+
+        //check metadata like size, file ending, ...
+        let isCorrect = true;
+        const filetype = file.type;
+        const size = file.size;
+        isCorrect = ( filetype === 'application/vnd.openxmlformats-officedocument.presentationml.presentation' ) && ( size < MAX_FILESIZE );
+
+        if (isCorrect) {
+            let reader = new FileReader();
+
+            function errorHandler(evt) {
+                switch(evt.target.error.code) {
+                    case evt.target.error.NOT_FOUND_ERR:
+                        console.error('File Not Found!');
+                        break;
+                    case evt.target.error.NOT_READABLE_ERR:
+                        console.error('File is not readable');
+                        break;
+                    case evt.target.error.ABORT_ERR:
+                        console.info('Cancel clicked');
+                        break; // noop
+                    default:
+                        console.error('An error occurred reading this file.', evt.target.error);
+                };
+            }
+
+            let that = this;
+
+            // Closures to capture the file information/data
+            reader.onloadend = (function(theFile) {
+                return function(e) {
+                    console.log('file was read: ', file);
+                    console.log('also', theFile);
+                    console.log(e.target.result.length, 'bytes');
+
+                    //Save it to store
+                    const payload = {
+                        file: file ? file : theFile,
+                        base64: e.target.result
+                    };
+                    that.context.executeAction(storeFile, payload);
+                };
+            })();
+            reader.onerror = errorHandler;
+            reader.onabort = function(e) {
+                console.error('File read cancelled');
+            };
+
+            // Read in the file
+            reader.readAsDataURL(file);
+
             ReactDOM.findDOMNode(this.refs.submitbutton).focus();
         }
-    }
-    handleFileSelect(){
-        //TODO - Check for correct format and
-        //Do this via flux flow - this.props.ImportStore.isAllowed
-        this.context.executeAction(importFileSelect, {});  // example copied from deck.js
-        return false;
-    }
-    handleFileSubmit(){
-        //TODO: show mockup progress bar
-        //send loadImportFile event and get mock-up presentaton data from this.props.ImportStore.content from importStore.js
-        this.context.executeAction(loadImportFile, {});  // example copied from deck.js
-        return false;
-    }
-    //redirect to presentation deck with id (input param)
-    handleRedirect(id){
-        this.context.executeAction(importFinished, {});  // destroy current state
-        this.context.executeAction(navigateAction, {
-            url: '/deck/' + id
-        });
+
         return false;
     }
     render() {
         //variable for intermediate storage of output
         let outputDIV = '';
-        if(this.props.ImportStore.isUploaded){
-            //show upload message
-            outputDIV =  <div className="ui bottom attached segment">
-                          <div dangerouslySetInnerHTML={{__html:this.props.ImportStore.content}} />
-                         </div>;
-                         //TODO - Progressbar - nice feature = get upload state from store and show in upload state. E.g. importing slide 1 of 99. See example in slidecontrol.js
-            //mock-up timeout for redirect simulates time for uploading
-            setTimeout( () => {
-                //TODO - clear ImportStore - when user goes back to import page - gets initial state
-                this.handleRedirect(Math.floor(Math.random(1,1000000)*100));
-            }, 3000);
-        }else{
-            //landing page - show file-select button and upload button
-            outputDIV =      <div className="ui row">
-                                <div className="column">
-                                    <div className="ui content">
-                                        <h2 className="ui header">Upload your presentation</h2>
-                                        <p>Select your presentation file and upload it to SlideWiki. </p>
-                                    </div>
-                                    <br />
-                                          <div className="ui input file focus animated" onChange={this.handleFileSelect.bind(this)}>
-                                                <input ref="selectbutton"  type="file" accept="application/vnd.openxmlformats-officedocument.presentationml.presentation" tabIndex="0" onChange={this.handleFileSelect.bind(this)}></input>
-                                                {!this.props.ImportStore.isAllowed ?
-                                                  <div tabIndex="0" ref="submitbutton" className="ui animated button green disabled">
-                                                    <div className="visible content"><i className="upload icon"></i>Upload <i className="upload icon"></i></div>
-                                                    <div className="hidden content"><i className="thumbs up icon"></i>To SlideWiki<i className="thumbs up icon"></i></div>
-                                                  </div>
-                                                  :
-                                                  <button tabIndex="0" ref="submitbutton" className="ui animated button green" onClick={this.handleFileSubmit.bind(this)} onChange={this.handleFileSubmit.bind(this)}>
-                                                    <div className="visible content"><i className="upload icon"></i>Upload <i className="upload icon"></i></div>
-                                                    <div tabIndex="0" className="hidden content" ><i className="thumbs up icon"></i>To SlideWiki<i className="thumbs up icon"></i></div>
-                                                  </button>
-                                                }
-                                          </div>
-                                    <br />
-                                    <div className="ui content">
-                                        <p>Presentation formats currently supported: Powerpoint (*.pptx) </p>
-                                        <p>Possible future support for: OpenOffice Impress (.odp, .odg, and .otp), Prezi, and Apple Keynote (.key)</p>
-                                    </div>
-                                    <br />
-                                </div>
-                            </div>;
-        }
-        return (
-            <div className="ui page grid" ref="import">
-                {outputDIV}
-            </div>
-        );
+
+        let uploadBtn_classes = classNames({
+            'ui': true,
+            'animated': true,
+            'approve': true,
+            'disabled': !this.props.ImportStore.fileReadyForUpload,
+            'button': true,
+            'green': true
+        });
+
+        outputDIV =   <div className="ui small modal" ref="import">
+                          <div className="header">
+                              <h2>Upload your presentation</h2>
+                          </div>
+                          <div className="content">
+                              <p>Select your presentation file and upload it to SlideWiki.</p>
+                              <p>Only PowerPoint (.pptx) is supported.</p>
+                              <div className="ui input file focus animated">
+                                    <input ref="selectbutton" accept="application/vnd.openxmlformats-officedocument.presentationml.presentation" type="file" tabIndex="0" onChange={this.handleFileSelect.bind(this)} id="import_file_chooser" ></input>
+                              </div>
+                          </div>
+                          <div className="actions">
+                              <button tabIndex="0" ref="submitbutton" className={uploadBtn_classes} >
+                                  <div className="visible content"><i className="upload icon"></i>Upload <i className="upload icon"></i></div>
+                                  <div className="hidden content" ><i className="thumbs up icon"></i>To SlideWiki<i className="thumbs up icon"></i></div>
+                              </button>
+                              <div className="ui cancel button red" tabIndex="0">Cancel</div>
+                          </div>
+                      </div>;
+
+                      //from https://github.com/risis-eu/risis-datasets/blob/2a790c3b20b6c83c775d144cd69393032cdfaf82/components/object/ObjectIEditor.js
+                      //editor = <FileUploader spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onEnterPress={this.handleEnterPress.bind(this)} allowActionByKey="1"/>;
+
+
+        return outputDIV;
     }
 }
 

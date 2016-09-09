@@ -2,13 +2,13 @@ import React from 'react';
 import {connectToStores} from 'fluxible-addons-react';
 import UserNotificationsStore from '../../../stores/UserNotificationsStore';
 import UserNotificationsList from './UserNotificationsList';
-import updateUserNotificationsVisibility from '../../../actions/user/updateUserNotificationsVisibility';
-import markAsReadUserNotifications from '../../../actions/user/markAsReadUserNotifications';
-import loadUserNotifications from '../../../actions/user/loadUserNotifications';
+import updateUserNotificationsVisibility from '../../../actions/user/notifications/updateUserNotificationsVisibility';
+import markAsReadUserNotifications from '../../../actions/user/notifications/markAsReadUserNotifications';
+import loadUserNotifications from '../../../actions/user/notifications/loadUserNotifications';
 
 class UserNotificationsPanel extends React.Component {
     componentDidMount() {
-        context.executeAction(loadUserNotifications, {
+        this.context.executeAction(loadUserNotifications, {
             uid: 1//TODO get real user_id
         });
     }
@@ -59,6 +59,14 @@ class UserNotificationsPanel extends React.Component {
                         <label><a className="user" href={'/' + s.type + '/' + s.id}>{s.name}</a></label>
                     </div>
                 );
+        });
+        const activityTypeList = this.props.UserNotificationsStore.activityTypes.map((at, index) => {
+            return (
+                <div className="ui item toggle checkbox" key={index} >
+                    <input name="toggleCheckbox" type="checkbox" defaultChecked={at.selected} onChange={this.handleChangeToggle.bind(this, at.type, 0)} />
+                    <label>{at.type.charAt(0).toUpperCase() + at.type.slice(1)}</label>
+                </div>
+            );
         });
 
         const notifications = this.props.UserNotificationsStore.notifications;
@@ -116,6 +124,14 @@ class UserNotificationsPanel extends React.Component {
                                 <div ref="subscriptionslist">
                                     <div className="ui relaxed list">
                                         {deckSubscriptionList}
+                                    </div>
+                                 </div>
+                            </div>
+                            <h4 className="ui header">Show activity types:</h4>
+                            <div className="activityTypes">
+                                <div ref="activityTypeList">
+                                    <div className="ui relaxed list">
+                                        {activityTypeList}
                                     </div>
                                  </div>
                             </div>

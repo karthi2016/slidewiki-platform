@@ -1,5 +1,6 @@
 import Fluxible from 'fluxible';
 import fetchrPlugin from 'fluxible-plugin-fetchr';
+import userStoragePlugin from './plugins/UserStorage/userStoragePlugin';
 import Application from './components/Application';
 import ApplicationStore from './stores/ApplicationStore';
 import RouteStore from './stores/RouteStore';
@@ -19,12 +20,16 @@ import ContentUsageStore from './stores/ContentUsageStore';
 import ContentQuestionsStore from './stores/ContentQuestionsStore';
 import ContentDiscussionStore from './stores/ContentDiscussionStore';
 import SimilarContentStore from './stores/SimilarContentStore';
-import TabLinksStore from './stores/TabLinksStore';
+import ContentModulesStore from './stores/ContentModulesStore';
 import ImportStore from './stores/ImportStore';
 import PresentationStore from './stores/PresentationStore';
 import UserNotificationsStore from './stores/UserNotificationsStore';
+import UserRegistrationStore from './stores/UserRegistrationStore';
 import SearchResultsStore from './stores/SearchResultsStore';
 import AdvancedSearchStore from './stores/AdvancedSearchStore';
+import UserProfileStore from './stores/UserProfileStore';
+import ErrorStore from './stores/ErrorStore';
+import AddDeckStore from './stores/AddDeckStore';
 
 // create new fluxible instance & register all stores
 const app = new Fluxible({
@@ -48,12 +53,16 @@ const app = new Fluxible({
         ContentQuestionsStore,
         ContentDiscussionStore,
         SimilarContentStore,
-        TabLinksStore,
+        ContentModulesStore,
         ImportStore,
         PresentationStore,
         UserNotificationsStore,
+        UserRegistrationStore,
         SearchResultsStore,
-        AdvancedSearchStore
+        AdvancedSearchStore,
+        UserProfileStore,
+        ErrorStore,
+        AddDeckStore
     ]
 });
 
@@ -61,5 +70,6 @@ const app = new Fluxible({
 app.plug(fetchrPlugin({
     xhrPath: '/api' // Path for XHR to be served from
 }));
+app.plug(userStoragePlugin({}));
 
 module.exports = app;

@@ -11,6 +11,16 @@ export default {
         },
         'notification': {
             uri: 'http://notificationservice.manfredfris.ch'
+        },
+        'user': {
+            uri: 'http://userservice.manfredfris.ch'
+        },
+        'import': {
+            uri: 'http://importservice.manfredfris.ch',
+            protocol: 'http:',
+            host: 'importservice.manfredfris.ch',
+            path: '/importPPTX',
+            port: 80
         }
     }
 };
