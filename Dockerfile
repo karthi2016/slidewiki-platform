@@ -16,7 +16,7 @@ RUN npm install
 #   Configuration   #
 # ----------------- #
 
-RUN if [ ! -e /nodeApp/configs/microservices.js ]; then cp /nodeApp/configs/microservices.sample.js /nodeApp/configs/microservices.js; fi
+RUN if [ ! -e /nodeApp/configs/microservices.js ]; then envsubst /nodeApp/travis/microservice.js.template /nodeApp/config/microservice.js; fi
 
 # -------- #
 #   Run!   #

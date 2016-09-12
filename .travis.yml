@@ -12,20 +12,16 @@ cache:
   - "./node_modules"
   - "./bower_components"
 before_install:
-- if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" = "false" ] ; then ./travis_scripts/install_compose.sh ; fi
-- if [ "$TRAVIS_BRANCH" == "release" ] && [ "$TRAVIS_PULL_REQUEST" = "false" ] ; then ./travis_scripts/install_compose.sh ; fi
+- if [ "$TRAVIS_BRANCH" == "master" ] || [ "$TRAVIS_BRANCH" == "release" ] && [ "$TRAVIS_PULL_REQUEST" = "false" ] ; then ./travis/install_compose.sh ; fi
 before_script:
 - bower install
 script:
 - npm run lint
 - npm run test
 after_success:
-- openssl aes-256-cbc -K $encrypted_3ef84d34223e_key -iv $encrypted_3ef84d34223e_iv -in deployment_keys.tar.enc -out deployment_keys.tar -d
-- if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" = "false" ] ; then ./travis_scripts/dockerhub.sh master; fi
-- if [ "$TRAVIS_BRANCH" == "release" ] && [ "$TRAVIS_PULL_REQUEST" = "false" ] ; then ./travis_scripts/dockerhub.sh latest-sprint; fi
-- if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" = "false" ] ; then ./travis_scripts/deploy.sh master; fi
-- if [ "$TRAVIS_BRANCH" == "release" ] && [ "$TRAVIS_PULL_REQUEST" = "false" ] ; then ./travis_scripts/deploy.sh latest-sprint; fi
+- if [ "$TRAVIS_BRANCH" == "master" ] || [ "$TRAVIS_BRANCH" == "release" ] && [ "$TRAVIS_PULL_REQUEST" = "false" ] ; then ./travis/dockerhub.sh $TRAVIS_BRANCH && ./travis/deploy.sh $TRAVIS_BRANCH ; fi
 after_script:
+- rm .env
 - rm -f deployment_keys.tar
 - rm -f ~/.docker/{cert.pem,key.pem,ca.pem,config.json}
 services:
@@ -45,3 +41,5 @@ env:
   - secure: WdaHRyep+xqrdUPRtcGyTZKHyoXTZyJFp8DZw3dKmJ6wnZ/dh0hOQzNbmin4rsXIEnopmisy2GvrDKiwaWK0c0Gie9RLk7ozehFpRF8Qr8OXWsJdTEF4lWbZ+gSXlXK+J/a1ojsVYZes8g7+7hlwiw+m8g3XYN81HaOui25eDFOgS+u/cKZhewUoI1Ys9njnj/dJz6gTWhK8RZHBxFlsAsy7jllazR3f5++5JNIvhsf1eOzyCZ+x9l4u4Mx6hrpZ9z5ZEU7gGTY4fHDT/yDRU+H4aCUbuT7n6RDScPF8QOoWZC1FtX3/cbshO/0EZvaec0ZLdsKvzlmGDe8Ue5Dj3cEmEpcm5xE7B5U4R6Dsn293J0yXNvv7AfnlGwR8hengbBZ5W/KKHA4yqsSApA0N41kk2WdqQmQMKpsZOah9Q8KLpgNc1z9FHK9tHFs+NaGIv51nDRSyzrq//TohU1d302j4GPAXUAlOB4P4KWNntlH8+tOUN2bHOyYTck41DibTgwdSXRH4Np9EgEjbsOGorXuuwUIyObXWJcJvBHOVMFe76SQ/3O+f+BraBWUsMg0V2y/ysjIVulPXM+asZa8JqCw1CnudJBedw1ADbfAZPp4Ktg36kYCL9NMUS/lLPERPOdK1ygYpvP12Ga+UHk/c+NDVZMntehbae+7ZN6tYwik=
   - secure: ClYcOxQTwnyVVBt0q6n+h/rqEhv2U2D/37LMwLZ8YV4B1ye2Mi45SCf+n4PVxkrUigOSHAQQ+Gqybd2SNS693ydhngwV8RcsARTuYgKA+//w5+ontOEe8z+mN1o0eoRiWwQCYNRrh++z4th0yGfV0gKwz5vaNnJMlzlO/leBc2JQoaV7q0LLv1lUpdIGj2B/T7NhF1EEY3b/cCvWLRrv09+cdortYPFmocTokJ87hLBXwh4QAXGCBkD9x6Y4sBHNenYXQF/oVTq1OZYXpRaTHykERD/8eMCZ/QEz7uvcWy4wu5rRuJHtCa+Cb3uBm8M3MUmMnXmoATrDqRQQWU5/7Eg0967GWypdUnJXTPeX0cAGEdXqoF6zyRt/qwzswiLErjCk0TpLQsA+NXaO1g8qTO+U1NKAO595E4HzdL3VFasu28PPjCNj78C39NslL33mFFUh1X2atHNxW/7SXw6ANKNw9ccPOdIfjlDsxCig8QEdAw/gMModo+RQNeGbtg32xHEtO9Gq6q+i0b6GKhai1myqapJXXXvqsrzdg5krVg+J5B5x+kA6O4Rx+EKRw+QpWMVoOAEPRCJ5VMUzMXUvuLv5qUfmlIJOks2w2mwudYdN2KzZpBGwcMHPe9rjvdEQBQXFY4qA4nfiu+f4F0osVHx+iw/P+5KWKKcbGOlvYXc=
   - secure: KMcAALshRsLXSJ4Sf9hdMnAerknHGspMtaY/tXqE/V7Ywa1UmJEguFC395eBlwyCK8Zd7bj+qUykxH29M0JtAdTtEz7Sqfv2nFGgMHtSElRC28o8EECASoEEmGVXivo0Hv8W1caT+6bQdWgubR50uYT0k/V2ebT2oPCJoBwLHbdNUekHEIM5C+q4zbP8oXEpZReVgV2XjavcbIa6ttawBYLZXFGNVOM2XVIQLwMwkOHIxGrzDBUcxzn8kDUq53L01Hg3AOg7ZAQ2ADyBBp4STtENmDvgdvHnbJQHp1uLUyoUM4MvgmKduR6Z9ZTP7a9+Bd/rOiLsg/OIHKCapYpeUTmyEmhAnRAH54f6af4KKEk8XM7H3V6k2jZswyJ/pf05pD4CC1/cFi3lNNUzeElpOLHRxBruUI+CD9/QKbdG+3MA20rjzMDq2cx24vgZ5hT+E0bZzc2aDqAxKnBVHvpVKAOECg/k6Vrdli9d+HIz+kB/Vu4sjf+nNtyWRMJyi7L87xN7B7fUvKe/vvSTGg5w8HX9houhFtw27hjb9z3+BY9wPQD/vl+UAVbz6xNEuOATvzuuQE1rVQK/hh4SJBn6wj7+toTGFFMiYIOk+UCmTJ+OEuMjGimztp70OUg1ZZw1zqmpKxH7hd8hsE7z7FWtDWI6u+Q/8EM8oyJiyhsxr1o=
+  - secure: kJjlUmMWYGGO8hhzkXBZxjjrn6o2ptj+0x0IVbnZ0wqDApeA+v8MjpH/ofBvkVfwxYukA/WOQ/xZ6KJ95qH/op2ealqYAjbta9V0LxEOqzPOVhj8UqHAjrq0U5h9EaiPbt/0hVudnZMBnkBkIsZtMk4vW0ITsgFybWGthCbPyGoRoQMcFsxC2+ZjaXvhPWbhcWr0M+E9pEpr0DFWWu0jqE6ex/jTaHqcApga9uDBKMZxFFMt8papRiOCH14kmcTkiskaG475c4GpL+E2ZcTyijI3QYYBZ+MSayi+gg8N3MJjQelC79nVaIcBxFKtRCWIpOJe62NI2KpdSUWx0kbHlJm0C/s6kspcBoXrg/yAq1U1WIiPQ+OjiXUNM0puF5DjbUHa1e+iVbUI0koDkSfgTpymiWOOCmVPxw+tR89TRSo2TIDiyxywARLsTeun4TyrHSCq62ZmA+akl50deZ/yazxbg78TtDgwhH8AKhTQAxNqjLaQP48IIhUNj7qICT2dW+q8ASlxhMDao44ADFgGCj00Qu/JlFgUad0gcrPqhGg98wnftQ7onHmR+o6O9mtlPbZuHGKNYnyfwjnkntLSLgNKhUNjPHkL6JFRE1wpnja21qwjSbDcKCunAT3WrAd2V3VJirvYXEQGI6ViyTJ5wuJwrbQJITuB+Xw4tXMQrmg=
+  - secure: F5iykd830cEGkDBRA/2PEV0GBfdKAERc+jff/jUi+9EVF85z1FgCyZh/e2iZrqov7yx7r05MM6kUQqJhN3ja7ENjIKVo1TEdLFWE8+MRDN8T+7R96T5YQp0huRlh+8m3KK7ee3LTTXJ3cWVL7XXnbQmQDmjAtM3GHphoGLf9s30Jo7SRwlk+Q5Zx4AzWdpiugms/YclbSl5yLSnsCL1GuZziBRDkDaXoPKImJZBSL2jeXNDzgCuqE+x73M7Gdc8SMtN97s4R+byQTSG4bMajPi8veUGvQOsblbpI6FXDqdYZuTwA89PKiTS4//AK+DrXwXiHydzGxonNXLdB9NC7wpd1XXlL/gcjwGQ57nT8Azmtp1n2XCFo5/17fHnvcs5glIpXIP/I5FtMz8BiJKSUsvjDmmUdi7E6WKfTHrDfCk3twoZ+Lukv981eNcANRPS467OyHANs2RdJi+T2g2bSNDfsXP2AnJy+BgJnZDOI1n4kx/onh6upjo9E7fV7Bt1fiTs7T5xIYgOL/KBbsrqy/jRDpHVhuDwiQuDVNpIpiiqo14oKpVTyCczd+tYRSlRq50Mzx+WpffmMl+nblq3ws/+Cc3zplVxOv3sWfIJlwcKk3kwgQTKXcQHwe87L2ty0BI1qOTU2o+3UhUjEqoqceDJUzZoe89XOJP+P96e1o44=
