@@ -7,6 +7,7 @@ branches:
   only:
   - "/^(?i:SWIK)-.*$/"
   - master
+  - SWAD-15_test_servers
 cache:
   directories:
   - "./node_modules"
