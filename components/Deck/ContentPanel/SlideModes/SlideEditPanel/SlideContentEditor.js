@@ -36,7 +36,7 @@ class SlideContentEditor extends React.Component {
 
         //reset scaling of pptx2html element to get original size
         $(".pptx2html").css({'transform': '', 'transform-origin': ''});
-        
+
         //ReactDOM.findDOMNode(this.refs.inlineContent).attr('value');
         //ReactDOM.findDOMNode(this.refs.inlineContent).getContent();
         //let slide.content = 'test';
@@ -506,7 +506,7 @@ class SlideContentEditor extends React.Component {
             <div style={headerStyle} contentEditable='true' name='inlineHeader' ref='inlineHeader' id='inlineHeader' dangerouslySetInnerHTML={{__html:this.props.title}}></div>
             <hr />
                 <div className="reveal">
-                    <div className="slides" style={revealSlideStyle}>
+                    <div className="slides">
                             <div style={contentStyle} contentEditable='true' name='inlineContent' ref='inlineContent' id='inlineContent' dangerouslySetInnerHTML={{__html:this.props.content}}></div>
                     </div>
                 </div>
