@@ -12,7 +12,7 @@ let playerCss = {
     height: '100%',
     position: 'absolute',
     top: '0',
-    font-size: '100%';
+    fontSize: '100%'
 };
 
 let clearStyle = {
@@ -40,6 +40,7 @@ class Presentation extends React.Component{
             $('.ui.inverted.blue.menu, .ui.inverted.menu .blue.active.item').attr({'aria-hidden': 'hidden', 'hidden': 'hidden'});
             $('.ui.horizontal.segments.footer').css({'display': 'none'});
             $('.ui.horizontal.segments.footer').attr({'aria-hidden': 'hidden', 'hidden': 'hidden'});
+
             let styleName = this.props.PresentationStore.theme;
 
 
@@ -47,6 +48,8 @@ class Presentation extends React.Component{
 
 
             Reveal.initialize({
+                transition: 'none',
+                backgroundTransition: 'none',
                 history: true,
                 dependencies: [
                     { src: '/custom_modules/reveal.js/plugin/notes/notes.js', async: true }
@@ -64,7 +67,7 @@ class Presentation extends React.Component{
         this.slides = this.getSlides();
         return(
             <div>
-                <div className="reveal" style={this.playerCss}  ref={(refToDiv) => this.revealDiv = refToDiv} >
+                <div className="reveal" style={this.playerCss}  ref={(refToDiv) => this.revealDiv = refToDiv} data-transition="none" data-background-transition="none">
                     <div className="slides">
         			     	{this.slides}
         			      </div>
