@@ -2,9 +2,6 @@
 This is mostly pptx2html, but also includes any other changes we need from the default
 pptx2html.
 */
-.reveal .slides{
-    text-align: start !important;
-}
 
 .reveal .slides .pptx2html .hidden {
 	display: none;
