@@ -66,7 +66,9 @@ CKEDITOR.editorConfig = function( config ) {
     //config.filebrowserUploadUrl = 'http://platform.manfredfris.ch/importfile';
     //config.filebrowserUploadUrl = 'http://platform.manfredfris.ch/importfile';
     //config.filebrowserUploadUrl = 'http://localhost:8880/importPPTX';
-    config.filebrowserUploadUrl = 'http://localhost:8880/importImage'; //make importservice.manfredfris.ch/importImage when finished
+    // config.filebrowserUploadUrl = 'http://localhost:4000/importImage'; //make importservice.manfredfris.ch/importImage when finished
+    //config.filebrowserUploadUrl = Microservices.import.uri +  + '/importImage';
+
     //config.imageUploadUrl = 'http://localhost:8880/importPPTX';
     //config.uploadUrl = 'http://localhost:8880/importImage?type=Images';
     //config.imageUploadUrl = 'http://localhost:8880/importImage?type=Images';
