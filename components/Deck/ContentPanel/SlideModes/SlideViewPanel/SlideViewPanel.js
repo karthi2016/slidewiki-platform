@@ -32,24 +32,29 @@ class SlideViewPanel extends React.Component {
 
         }
 
+        const sectionStyle = {
+            overflow: 'hidden'
+        };
 
         return (
-          <div className="ui bottom attached segment">
-              <ResizeAware ref='container' id='container'>
-                  <div ref="slideViewPanel" className="ui" style={compStyle}>
-                      <div className="reveal">
-                          <div className="slides">
-                              <div id="inlineContent" dangerouslySetInnerHTML={{__html:this.props.SlideViewStore.content}} />
-                          </div>
-                          <br />
-                      </div>
-                  </div>
-                  <div ref="slideViewPanelSpeakerNotes" className="ui" style={compSpeakerStyle}>
-                      {this.props.SlideViewStore.speakernotes ? <b>Speaker Notes:</b> : ''}
-                      <div dangerouslySetInnerHTML={{__html:this.props.SlideViewStore.speakernotes}} />
-                  </div>
-              </ResizeAware>
-        </div>
+            <div className="ui bottom attached segment">
+                <ResizeAware ref='container' id='container'>
+                    <div ref="slideViewPanel" className="ui" style={compStyle}>
+                        <div className="reveal">
+                            <div className="slides">
+                                <section className="present" style={sectionStyle}>
+                                  <div id="inlineContent" dangerouslySetInnerHTML={{__html:this.props.SlideViewStore.content}} />
+                                </section>
+                            </div>
+                        <br />
+                        </div>
+                    </div>
+                    <div ref="slideViewPanelSpeakerNotes" className="ui" style={compSpeakerStyle}>
+                        {this.props.SlideViewStore.speakernotes ? <b>Speaker Notes:</b> : ''}
+                        <div dangerouslySetInnerHTML={{__html:this.props.SlideViewStore.speakernotes}} />
+                    </div>
+                </ResizeAware>
+            </div>
         );
     }
     componentDidMount(){

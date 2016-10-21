@@ -341,6 +341,10 @@ class SlideContentEditor extends React.Component {
             position: 'relative'
         };
 
+        const sectionStyle = {
+            overflow: 'hidden'
+        };
+
         //<textarea style={compStyle} name='nonInline' ref='nonInline' id='nonInline' value={this.props.content} rows="10" cols="80" onChange={this.handleEditorChange}></textarea>
         //                <div style={headerStyle} contentEditable='true' name='inlineHeader' ref='inlineHeader' id='inlineHeader' dangerouslySetInnerHTML={{__html:'<h1>SLIDE ' + this.props.selector.sid + ' TITLE</h1>'}}></div>
         /*
@@ -376,7 +380,9 @@ class SlideContentEditor extends React.Component {
                 <div className="ui" style={compStyle}>
                     <div className="reveal">
                         <div className="slides">
+                            <section className="present" style={sectionStyle}>
                                 <div style={contentStyle} contentEditable='true' name='inlineContent' ref='inlineContent' id='inlineContent' dangerouslySetInnerHTML={{__html:this.props.content}}></div>
+                            </section>
                         </div>
                     </div>
                 </div>
