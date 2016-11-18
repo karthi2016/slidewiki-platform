@@ -30,6 +30,7 @@ import async from 'async';
 import { chooseAction } from '../actions/user/userprofile/chooseAction';
 import loadFeatured from '../actions/loadFeatured';
 import loadRecent from '../actions/loadRecent';
+import loadSlide from '../actions/loadSlide';
 
 export default {
     //-----------------------------------HomePage routes------------------------------
@@ -199,6 +200,15 @@ export default {
         handler: require('../components/Deck/Deck'),
         action: (context, payload, done) => {
             context.executeAction(loadDeck, payload, done);
+        }
+    },
+    slide: {
+        path: '/slide/:sid',
+        method: 'get',
+        page: 'slide',
+        handler: require('../components/Slide/Slide'),
+        action: (context, payload, done) => {
+            context.executeAction(loadSlide, payload, done);
         }
     },
     contributors: {

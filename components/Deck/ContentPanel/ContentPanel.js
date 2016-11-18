@@ -37,17 +37,20 @@ class ContentPanel extends React.Component {
                 }
                 break;
         }
+        let contentActionsHeaderDiv = (this.props.hideContentHeader) ? '' : <div className="ui top attached">
+            <ContentActionsHeader ContentStore={this.props.ContentStore} />
+        </div>;
+        let contentActionFooterDiv = (this.props.hideContentFooter) ? '' : <div className="ui bottom attached">
+            <ContentActionsFooter ContentStore={this.props.ContentStore} />
+        </div>;
+
         return (
             <div ref="contentPanel">
-                <div className="ui top attached">
-                    <ContentActionsHeader ContentStore={this.props.ContentStore} />
-                </div>
+                {contentActionsHeaderDiv}
                 <div className="ui top attached">
                     {targetComponent}
                 </div>
-                <div className="ui bottom attached">
-                    <ContentActionsFooter ContentStore={this.props.ContentStore} />
-                </div>
+                {contentActionFooterDiv}
              </div>
         );
     }
