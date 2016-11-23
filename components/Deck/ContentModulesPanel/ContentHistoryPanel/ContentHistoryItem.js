@@ -21,12 +21,16 @@ class ContentHistoryItem extends React.Component {
         );
         let revisionLink = <NavLink
         href={ActivityFeedUtil.makeNodeRevisionURL(this.props.selector, revision.id)}>Revision {revision.id} </NavLink>;
+        let revisionIcon = '';
+        if(this.props.selector.id){
+            revisionIcon = (revision.active) ? <i className='check circle icon green'></i> : revertIcon;
+        }
         return (
         <div className="item">
             <div className="content">
                 <div className="header">
                     {revisionLink}
-                    {revision.active ? <i className='check circle icon green'></i> : revertIcon}
+                    {revisionIcon}
                 </div>
                 <div className="description">
                     <span>{'by '}</span>

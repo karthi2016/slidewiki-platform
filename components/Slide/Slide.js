@@ -4,12 +4,13 @@ import {connectToStores} from 'fluxible-addons-react';
 // import DeckPageStore from '../../stores/DeckPageStore';
 // import hideLeftColumn from '../../actions/deckpagelayout/hideLeftColumn';
 // import restoreDeckPageLayout from '../../actions/deckpagelayout/restoreDeckPageLayout';
-// import NavigationPanel from './NavigationPanel/NavigationPanel';
+// import NavigationPanel from '../Deck/NavigationPanel/NavigationPanel';
 // import TreePanel from './TreePanel/TreePanel';
 import ContentPanel from '../Deck/ContentPanel/ContentPanel';
 import ContentModulesPanel from '../Deck/ContentModulesPanel/ContentModulesPanel';
 // import ActivityFeedPanel from './ActivityFeedPanel/ActivityFeedPanel';
 import ContentUsagePanel from '../Deck/ContentModulesPanel/ContentUsagePanel/ContentUsagePanel';
+import SlideTitlePanel from './SlideTitlePanel';
 
 class Slide extends React.Component {
     // handleExpandClick(){
@@ -63,15 +64,18 @@ class Slide extends React.Component {
         // }
         return (
             <div className="ui vertically padded stackable grid container" ref="deck">
-                <div className="twelve wide column">
-                    <div className="ui floating message twelve wide column">
-                          <div className="header">
-                            Usage
-                          </div>
-                      <ContentUsagePanel />
+            {
+                // <div className="twelve wide center aligned column">
+                //     <div className="ui floating message twelve wide column">
+                //       <ContentUsagePanel />
+                //     </div>
+                // </div>
+            }
+                <div className="row">
+                    <div className="twelve wide column">
+                      <SlideTitlePanel />
                     </div>
                 </div>
-
                 <div className="row">
                     <div className="twelve wide column">
                         <ContentPanel hideContentHeader={true} hideContentFooter={true} />

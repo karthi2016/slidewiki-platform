@@ -69,7 +69,9 @@ class ActivityFeedUtil {
         let sidWithRevision = selector.sid.split('-')[0] + '-' + revisionId;
         if (selector.stype === 'deck') {
             nodeURL = '/deck/' + sidWithRevision;
-        } else {
+        } else if(!selector.id){
+            nodeURL = '/slide/' + sidWithRevision;
+        }else {
             nodeURL = '/deck/' + selector.id + '/' + selector.stype + '/' + sidWithRevision;
             if (selector.spath) {
                 nodeURL += '/' + selector.spath;

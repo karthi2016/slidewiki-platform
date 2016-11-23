@@ -6,13 +6,16 @@ class SearchResultsSubList extends React.Component {
         let subListItems = this.props.data.map((item, index) => {
             if(index !== 0){
                 let resultLink = '';
+                let itemIcon = '';
+
                 switch (item.kind) {
                     case 'slide_revision':
                         if(item.parent_deck && item.parent_deck !== 'undefined'){
                             resultLink = '/deck/' + item.parent_deck + '/slide/' + item.parent_id + '-' + item.id;
                         }
                         else{
-                            resultLink = '/slideview/' + item.parent_id + '-' + item.id;
+                            resultLink = '/slide/' + item.parent_id + '-' + item.id;
+                            itemIcon = <div className="ui yellow mini label">inactive</div>;
                         }
                         break;
                     case 'deck_revision':
@@ -21,7 +24,7 @@ class SearchResultsSubList extends React.Component {
                 }
 
                 return (
-                    <div className="row" key={index}><a href={resultLink} >{item.title}</a></div>
+                    <div className="row" key={index}><a href={resultLink}>Revision {item.id}</a> {itemIcon}</div>
                 );
             }
         });

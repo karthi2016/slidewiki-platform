@@ -13,6 +13,7 @@ class SearchResultsItem extends React.Component {
         let item = result.revisions.docs[0];
         let resultLink = '';
         let description = '';
+        let itemIcon = '';
 
         // form icon, link, description according to result kind
         switch (result.kind) {
@@ -21,7 +22,8 @@ class SearchResultsItem extends React.Component {
                     resultLink = '/deck/' + item.parent_deck + '/slide/' + item.parent_id + '-' + item.id;
                 }
                 else{
-                    resultLink = '/slideview/' + item.parent_id + '-' + item.id;
+                    resultLink = '/slide/' + item.parent_id + '-' + item.id;
+                    itemIcon = <div className="ui yellow mini label">inactive</div>;
                 }
 
                 description = (item.content) ? item.content.substring(0, 100) + '...' : '';
@@ -38,7 +40,7 @@ class SearchResultsItem extends React.Component {
         let titleNode = (
             <div className="ui grid">
                 <div className="sixteen wide left aligned column">
-                    <div className="row"><b>{result.kind} <a href={resultLink} >{item.title}</a></b></div>
+                    <div className="row"><b>{result.kind} <a href={resultLink}>{item.title}</a></b> {itemIcon}</div>
                     <div className="row">{description}</div>
                 </div>
             </div>

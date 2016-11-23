@@ -17,11 +17,14 @@ export default {
         let selector = {'id': args.id, 'spath': args.spath, 'sid': args.sid, 'stype': args.stype, 'mode': args.mode};
         let isRootDeck = selector.stype === 'deck' && selector.id === selector.sid;
         if (resource === 'history.list') {
-            let history, contentItemPromise, parentPromise;
-            let parentId = TreeUtil.getParentId(selector);
-            if (!isRootDeck) {
-                //if the specified node is not the root deck, we need to request for its immediate parent in order to find the active revision
-                parentPromise = rp.get({uri: Microservices.deck.uri + '/deck/' + parentId}).promise().bind(this);
+            let history, contentItemPromise, parentPromise, parentId;
+            if(selector.id){
+                parentId = TreeUtil.getParentId(selector);
+
+                if (!isRootDeck) {
+                    //if the specified node is not the root deck, we need to request for its immediate parent in order to find the active revision
+                    parentPromise = rp.get({uri: Microservices.deck.uri + '/deck/' + parentId}).promise().bind(this);
+                }
             }
             contentItemPromise = rp.get({uri: Microservices.deck.uri + '/' + selector.stype + '/' + selector.sid.split('-')[0]}).promise().bind(this);
 
@@ -29,17 +32,19 @@ export default {
             Promise.all([parentPromise, contentItemPromise]).then((res) => {
                 let contentItem = JSON.parse(res[1]), revisions = contentItem.revisions, parentDeck;
                 let activeRevisionId;
-                if (isRootDeck) {
-                    activeRevisionId = contentItem.active;
-                }
-                else {
-                    parentDeck = JSON.parse(res[0]);
-                    //we asked for a specific revision of the parent deck so its revisions array should contain just one item
-                    activeRevisionId = parentDeck.revisions[0].contentItems[getRelPositionFromPath(selector.spath) - 1].ref.revision;
-                }
-                let activeRevision = revisions.find((revision) => revision.id === activeRevisionId);
-                if (activeRevision) {
-                    activeRevision.active = true;
+                if(selector.id){
+                    if (isRootDeck) {
+                        activeRevisionId = contentItem.active;
+                    }
+                    else {
+                        parentDeck = JSON.parse(res[0]);
+                        //we asked for a specific revision of the parent deck so its revisions array should contain just one item
+                        activeRevisionId = parentDeck.revisions[0].contentItems[getRelPositionFromPath(selector.spath) - 1].ref.revision;
+                    }
+                    let activeRevision = revisions.find((revision) => revision.id === activeRevisionId);
+                    if (activeRevision) {
+                        activeRevision.active = true;
+                    }
                 }
                 let userIdsHash = {};
                 revisions.forEach((revision) => {
